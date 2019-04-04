@@ -17,6 +17,7 @@ class Cubef extends StatefulWidget {
   final double height, width;
   final AnimationController controller;
   final Curve animationEffect;
+  final int animationDuration;
   
   RollUp rollUp;
 
@@ -30,15 +31,16 @@ class Cubef extends StatefulWidget {
       this.child6,
       this.height = 200.0,
       this.width = 200.0,
+      this.animationDuration = 2000,
       this.controller,
       this.animationEffect})
       : super(key: key);
 
   @override
-  _CubefState createState() => _CubefState();
+  CubefState createState() => CubefState();
 }
 
-class _CubefState extends State<Cubef> with SingleTickerProviderStateMixin {
+class CubefState extends State<Cubef> with SingleTickerProviderStateMixin {
   Animation _animation;
   Tween<double> _tween;
 
@@ -125,7 +127,7 @@ class _CubefState extends State<Cubef> with SingleTickerProviderStateMixin {
   void initStackChildrenRollLeftRight() {
     _stackChildren = [
       Transform(
-        alignment: FractionalOffset.center,
+        alignment: Alignment.center,
         transform: Matrix4.identity()
           ..setEntry(3, 2, 0.001)
           ..translate(-((widget.width / 2) * math.cos(_animation.value)), 0.0,
@@ -138,10 +140,10 @@ class _CubefState extends State<Cubef> with SingleTickerProviderStateMixin {
         )),
       ),
       Transform(
-        alignment: FractionalOffset.center,
+        alignment: Alignment.center,
         transform: Matrix4.identity()
           ..setEntry(3, 2, 0.001) // 0.001 is thin air
-          ..translate(((widget.width / 2) * math.sin(_animation.value)), 0.0,
+          ..translate(((widget.height / 2) * math.sin(_animation.value)), 0.0,
               -((widget.height / 2) * math.cos(_animation.value)))
           ..rotateY(_animation.value),
         child: Container(
@@ -159,7 +161,7 @@ class _CubefState extends State<Cubef> with SingleTickerProviderStateMixin {
 
     if (widget.controller == null) {
       _controller = AnimationController(
-          vsync: this, duration: Duration(milliseconds: 2000));
+          vsync: this, duration: Duration(milliseconds: widget.animationDuration));
     } else {
       _controller = widget.controller;
     }
@@ -209,7 +211,11 @@ class _CubefState extends State<Cubef> with SingleTickerProviderStateMixin {
                 _animation.value >= _tween.end - 0.2) ||
             (_tween.end < _tween.begin &&
                 _animation.value <= _tween.end + 0.2)) {
-          initStackChildrenTop(_backWidget);
+            
+            if (_lastAction == Action.down || _lastAction == Action.up)
+              initStackChildrenTop(_verticalIndex[0]);
+            else if (_lastAction == Action.left || _lastAction == Action.right)
+              initStackChildrenTop(_horizontalIndex[0]);
         }
       });
     });
@@ -224,21 +230,21 @@ class _CubefState extends State<Cubef> with SingleTickerProviderStateMixin {
 
   /// Start roll-up cube animation
   void rollUp() {
-    _topWidget = _backWidget;
+     _backWidget = _verticalIndex[0];
     _verticalIndex = ArrayUtils.moveRight(_verticalIndex);
     _horizontalIndex[0] = _verticalIndex[0];
     _horizontalIndex[2] = _verticalIndex[2];
-    _backWidget = _verticalIndex[0];
+    _topWidget = _verticalIndex[0];
     _lastAction = Action.up;
-    _tween.begin = 0.0;
-    _tween.end = -(math.pi / 2);
+    _tween.begin = (math.pi / 2);
+    _tween.end = 0.0;
     _controller.reset();
     _controller.forward();
   }
 
   /// Start roll-down cube animation
   void rollDown() {
-    _topWidget = _backWidget;
+    _topWidget = _verticalIndex[0];
     _verticalIndex = ArrayUtils.moveLeft(_verticalIndex);
     _horizontalIndex[0] = _verticalIndex[0];
     _horizontalIndex[2] = _verticalIndex[2];
@@ -252,7 +258,7 @@ class _CubefState extends State<Cubef> with SingleTickerProviderStateMixin {
 
   /// Start roll-right cube animation
   void rollRight() {
-    _topWidget = _backWidget;
+    _topWidget = _horizontalIndex[0];
     _horizontalIndex = ArrayUtils.moveLeft(_horizontalIndex);
     _verticalIndex[0] = _horizontalIndex[0];
     _verticalIndex[2] = _horizontalIndex[2];
@@ -266,30 +272,26 @@ class _CubefState extends State<Cubef> with SingleTickerProviderStateMixin {
 
   /// Start roll-left cube animation
   void rollLeft() {
-    _topWidget = _backWidget;
+    _backWidget = _horizontalIndex[0];
     _horizontalIndex = ArrayUtils.moveRight(_horizontalIndex);
     _verticalIndex[0] = _horizontalIndex[0];
     _verticalIndex[2] = _horizontalIndex[2];
-    _backWidget = _horizontalIndex[0];
+    _topWidget = _horizontalIndex[0];
     _lastAction = Action.left;
-    _tween.begin = 0.0;
-    _tween.end = -(math.pi / 2);
+    _tween.begin = (math.pi / 2);
+    _tween.end = 0.0;
     _controller.reset();
     _controller.forward();
   }
 
   @override
   Widget build(BuildContext contex) {
-    return Center(
-      child: Expanded(
-        child: Container(
-          height: widget.height,
-          width: double.infinity,
-          child: Stack(
-            alignment: FractionalOffset.center,
-            children: _stackChildren,
-          ),
-        )
+    return Container(
+      height: widget.height,
+      width: double.infinity,
+      child: Stack(
+        alignment: FractionalOffset.center,
+        children: _stackChildren,
       ),
     );
   }
