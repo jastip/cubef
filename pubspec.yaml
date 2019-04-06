@@ -11,7 +11,7 @@ description: A 3D Cube Widget, which simulate animation (roll-up, roll-down, rol
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: "1.0.2"
+version: "1.0.3"
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -19,10 +19,9 @@ environment:
 authors:
   - JastiApp Developer <hello@jas-tip.com>
 
-repository:
-  - https://github.com/jastip/cubef/
+repository: "https://github.com/jastip/cubef/"
 
-homepage: https://dev.jas-tip.com/flutter-cube-widget/ 
+homepage: "https://dev.jas-tip.com/flutter-cube-widget/"
 
 dependencies:
   flutter:

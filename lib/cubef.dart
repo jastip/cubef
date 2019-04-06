@@ -12,29 +12,24 @@ typedef RollLeft = void Function();
 typedef RollRight = void Function();
 
 class Cubef extends StatefulWidget {
-   final Widget child1, child2, child3, child4, child5, child6;
+   final List<Widget> sides;
 
   final double height, width;
   final AnimationController controller;
   final Curve animationEffect;
   final int animationDuration;
   
-  RollUp rollUp;
-
   Cubef(
       {Key key,
-      this.child1,
-      this.child2,
-      this.child3,
-      this.child4,
-      this.child5,
-      this.child6,
+      this.sides,
       this.height = 200.0,
       this.width = 200.0,
-      this.animationDuration = 2000,
+      this.animationDuration = 500,
       this.controller,
       this.animationEffect})
-      : super(key: key);
+      : super(key: key) {
+        assert(this.sides != null && this.sides.length == 6);
+      }
 
   @override
   CubefState createState() => CubefState();
@@ -59,17 +54,17 @@ class CubefState extends State<Cubef> with SingleTickerProviderStateMixin {
     // see my blogs for these array setup
 
     _verticalIndex = [
-      widget.child1,
-      widget.child2,
-      widget.child3,
-      widget.child4
+      widget.sides[0],
+      widget.sides[1],
+      widget.sides[2],
+      widget.sides[3]
     ];
 
     _horizontalIndex = [
-      widget.child1,
-      widget.child6,
-      widget.child3,
-      widget.child5
+      widget.sides[0],
+      widget.sides[5],
+      widget.sides[2],
+      widget.sides[4]
     ];
   }
 
@@ -127,7 +122,7 @@ class CubefState extends State<Cubef> with SingleTickerProviderStateMixin {
   void initStackChildrenRollLeftRight() {
     _stackChildren = [
       Transform(
-        alignment: Alignment.center,
+        alignment: FractionalOffset.center,
         transform: Matrix4.identity()
           ..setEntry(3, 2, 0.001)
           ..translate(-((widget.width / 2) * math.cos(_animation.value)), 0.0,
@@ -140,10 +135,11 @@ class CubefState extends State<Cubef> with SingleTickerProviderStateMixin {
         )),
       ),
       Transform(
-        alignment: Alignment.center,
+        alignment: FractionalOffset.center,
+        origin: Offset(0.01, 0.0),
         transform: Matrix4.identity()
           ..setEntry(3, 2, 0.001) // 0.001 is thin air
-          ..translate(((widget.height / 2) * math.sin(_animation.value)), 0.0,
+          ..translate(((widget.width / 2) * math.sin(_animation.value)), 0.0,
               -((widget.height / 2) * math.cos(_animation.value)))
           ..rotateY(_animation.value),
         child: Container(
@@ -171,7 +167,7 @@ class CubefState extends State<Cubef> with SingleTickerProviderStateMixin {
     _animation = _tween.animate(CurvedAnimation(
         parent: _controller,
         curve: (widget.animationEffect == null)
-            ? Curves.elasticInOut
+            ? Curves.decelerate
             : widget.animationEffect));
 
     _controller.addListener(() {
@@ -221,10 +217,10 @@ class CubefState extends State<Cubef> with SingleTickerProviderStateMixin {
     });
 
     /// First initialize of the top and back widget
-    _topWidget = widget.child1;
-    _backWidget = widget.child1;
+    _topWidget = widget.sides[0];
+    _backWidget = widget.sides[0];
 
-    initStackChildrenTop(widget.child1);
+    initStackChildrenTop(widget.sides[0]);
     initIndexes();
   }
 

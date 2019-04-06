@@ -45,9 +45,61 @@ class _MyHomePageState extends State<MyHomePage> {
     cubefKey.currentState.rollRight();
   }
 
+  static double _width = 100.0, _height = 100.0;
+
+  List<Widget> sides = [
+    Container(
+      height: _height,
+      width: _width,
+      decoration: BoxDecoration(
+        color: Colors.black
+      ),
+      child: Text("1"),
+    ),
+    Container(
+      height: _height,
+      width: _width,
+      decoration: BoxDecoration(
+        color: Colors.green[500],
+      ),
+      child: Text("2"),
+    ),
+    Container(
+      height: _height,
+      width: _width,
+      decoration: BoxDecoration(
+        color: Colors.orange[500],
+      ),
+      child: Text("3"),
+    ),
+    Container(
+      height: _height,
+      width: _width,
+      decoration: BoxDecoration(
+        color: Colors.blue[500],
+      ),
+      child: Text("4"),
+    ),
+    Container(
+      height: _height,
+      width: _width,
+      decoration: BoxDecoration(
+        color: Colors.pink[500],
+      ),
+      child: Text("5"),
+    ),
+    Container(
+      height: _height,
+      width: _width,
+      decoration: BoxDecoration(
+        color: Colors.purple[500],
+      ),
+      child: Text("6"),
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    double width = 100.0, height = 100.0;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -57,58 +109,10 @@ class _MyHomePageState extends State<MyHomePage> {
         children: <Widget>[
           Cubef(
             key: cubefKey,
-            animationEffect: Curves.decelerate,
-            animationDuration: 500,
-            child1: Container(
-              height: height,
-              width: width,
-              decoration: BoxDecoration(
-                color: Colors.black
-              ),
-              child: Text("1"),
-            ),
-            child2: Container(
-              height: height,
-              width: width,
-              decoration: BoxDecoration(
-                color: Colors.green[500],
-              ),
-              child: Text("2"),
-            ),
-            child3: Container(
-              height: height,
-              width: width,
-              decoration: BoxDecoration(
-                color: Colors.orange[500],
-              ),
-              child: Text("3"),
-            ),
-            child4: Container(
-              height: height,
-              width: width,
-              decoration: BoxDecoration(
-                color: Colors.blue[500],
-              ),
-              child: Text("4"),
-            ),
-            child5: Container(
-              height: height,
-              width: width,
-              decoration: BoxDecoration(
-                color: Colors.pink[500],
-              ),
-              child: Text("5"),
-            ),
-            child6: Container(
-              height: height,
-              width: width,
-              decoration: BoxDecoration(
-                color: Colors.purple[500],
-              ),
-              child: Text("6"),
-            ),
-            width: 100,
-            height: 100,
+            animationDuration: 2000,
+            sides: sides,
+            width: _width,
+            height: _height,
           ),
           Divider(),
           Row(
